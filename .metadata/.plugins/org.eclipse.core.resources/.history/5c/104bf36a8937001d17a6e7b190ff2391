@@ -1,0 +1,38 @@
+/*
+ * arr_mn.cpp
+ *
+ *  Created on: 18 сент. 2022 г.
+ *      Author: vecto
+ */
+#include <iterator>
+using namespace std;
+
+class ArrMn{
+public:
+	string intersect(char* a, char* b, char c){
+		char c[len]{};
+		int n = 0;
+
+		for(int i = 0; a[i]; ++i){
+			for(int j = 0; b[j]; ++j){
+				if(a[i]==b[j]){
+					c[n++]=a[i];
+				}
+			}
+		}
+
+		c[n] = 0;
+
+		return string(c);
+
+	}
+
+	/*ArrMn unite(ArrMn a, ArrMn b){
+		ArrMn c;
+		int n = 0;
+
+		return 0;
+	}*/
+};
+
+

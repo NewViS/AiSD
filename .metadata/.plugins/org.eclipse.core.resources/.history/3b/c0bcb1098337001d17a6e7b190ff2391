@@ -1,0 +1,21 @@
+//============================================================================
+// Name        : lab1.cpp
+// Author      : Pesterev
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include "arr_mn.h"
+using namespace std;
+
+int main() {
+	char bc[] = "4561";
+	char ac[] = "1234";
+
+	c=ArrMn.intersect(a, b);
+
+	cout << c << endl; // prints !!!Hello World!!!
+	return 0;
+}
