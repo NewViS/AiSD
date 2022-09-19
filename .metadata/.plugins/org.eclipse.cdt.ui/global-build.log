@@ -4188,3 +4188,29 @@ g++ -o lab1 "src\\lab1.o"
 Info: Internal Builder is used for build
 g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
 g++ -o lab1 "src\\lab1.o" 
+23:48:19 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+..\src\lab1.cpp: In function 'int main()':
+..\src\lab1.cpp:14:15: warning: unused variable 'mn' [-Wunused-variable]
+   14 |         ArrMn mn;
+      |               ^~
+g++ -o lab1 "src\\lab1.o" 
+23:48:37 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+Info: Nothing to build for lab1
+23:50:07 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+Info: Nothing to build for lab1
+Info: Nothing to build for lab1
+Info: Nothing to build for lab1
+Info: Nothing to build for lab1
+23:55:17 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+Info: Nothing to build for lab1
