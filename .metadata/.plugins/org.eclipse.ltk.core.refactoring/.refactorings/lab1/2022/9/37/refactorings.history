@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;lab1/src/arr_mn&apos; to &apos;arr_mn.cpp&apos;" description="Rename resource &apos;arr_mn&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/arr_mn" name="arr_mn.cpp" stamp="1663516807716" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;lab1/src/arr_mn.cpp&apos; to &apos;arr_mn.h&apos;" description="Rename resource &apos;arr_mn.cpp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/arr_mn.cpp" name="arr_mn.h" stamp="1663520118567" updateReferences="true"/>
-</session>
