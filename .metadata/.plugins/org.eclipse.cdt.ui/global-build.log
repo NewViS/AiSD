@@ -4214,3 +4214,57 @@ Info: Internal Builder is used for build
 g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
 g++ -o lab1 "src\\lab1.o" 
 Info: Nothing to build for lab1
+22:31:25 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+22:32:06 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+22:32:52 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+Info: Nothing to build for lab1
+22:36:30 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+..\src\lab1.cpp: In function 'int main()':
+..\src\lab1.cpp:48:11: error: assigning to an array from an initializer list
+   48 |         e = {};
+      |         ~~^~~~
+22:36:50 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+..\src\lab1.cpp: In function 'int main()':
+..\src\lab1.cpp:48:11: error: incompatible types in assignment of 'main()::<lambda()>' to 'char [17]'
+   48 |         e = [N]{};
+      |         ~~^~~~~~~
+22:37:19 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+..\src\lab1.cpp: In lambda function:
+..\src\lab1.cpp:48:15: error: expected '{' before ';' token
+   48 |         e = [];
+      |               ^
+..\src\lab1.cpp: In function 'int main()':
+..\src\lab1.cpp:48:11: error: incompatible types in assignment of 'main()::<lambda()>' to 'char [17]'
+   48 |         e = [];
+      |         ~~^~~~
+22:44:49 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+..\src\lab1.cpp: In function 'int main()':
+..\src\lab1.cpp:48:9: error: 'memset' was not declared in this scope
+   48 |         memset(e, 0, sizeof(e));
+      |         ^~~~~~
+..\src\lab1.cpp:11:1: note: 'memset' is defined in header '<cstring>'; did you forget to '#include <cstring>'?
+   10 | #include "arr_mn.h"
+  +++ |+#include <cstring>
+   11 | using namespace std;
+22:45:09 **** Incremental Build of configuration Debug for project lab1 ****
+Info: Internal Builder is used for build
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\lab1.o" "..\\src\\lab1.cpp" 
+g++ -o lab1 "src\\lab1.o" 
+Info: Nothing to build for lab1

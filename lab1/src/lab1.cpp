@@ -7,18 +7,24 @@
 //============================================================================
 
 #include <iostream>
-#include "arr_mn.h"
+#include <cstring>
+
 using namespace std;
 
 int main() {
 	const int N = 17;
 	char a[] = "";
 	char b[] = "bdf";
-	char c[] = "dfgh";
-	char d[] = "acf";
-	char e[N];
+	char c[] = "12df";
+	char d[] = "acdf";
+	char e[N]{};
 	int n = 0;
 	bool elem_in_c;
+
+	struct El{
+		char s;
+		El* next;
+	};
 
 	//обработка константных массивов
 		//пересечение b и c
@@ -45,6 +51,8 @@ int main() {
 		//объединение a и b
 
 	n = 0;
+	memset(e, 0, sizeof(e));
+
 	for(int i = 0; a[i]; ++i){
 		e[n++]=a[i];
 	}
@@ -60,6 +68,7 @@ int main() {
 	}
 	e[n]=0;
 
+	//обработка списков
 
 	for(int i = 0; e[i]; ++i){
 		cout << e[i] << " ";
