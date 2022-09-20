@@ -13,10 +13,10 @@ using namespace std;
 
 int main() {
 	const int N = 17;
-	char a[] = "";
-	char b[] = "bdf";
-	char c[] = "12df";
-	char d[] = "acdf";
+	char a[N] = "";
+	char b[N] = "bdf";
+	char c[N] = "12df";
+	char d[N] = "acdf";
 	char e[N]{};
 	int n = 0;
 	bool elem_in_c;
