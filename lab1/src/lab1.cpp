@@ -8,17 +8,15 @@
 
 #include <iostream>
 #include <cstring>
+#include <time.h>
 
 using namespace std;
 
 int main() {
 	const int N = 17;
-	char a[N] = "";
-	char b[N] = "bdf";
-	char c[N] = "12df";
-	char d[N] = "acdf";
-	char e[N]{};
-	int n = 0;
+	char univers[] = "0123456789abcdef";
+	char a[N], b[N], c[N], d[N], e[N]{};
+	int n;
 	bool elem_in_c;
 
 	struct El{
@@ -26,8 +24,58 @@ int main() {
 		El* next;
 	};
 
+	srand(time(0));
+
+	n=0;
+	for(int i = 0; i<N; i++){
+		if(rand()%2) a[n++] = univers[i];
+	}
+	a[n] = 0;
+
+	n=0;
+	for(int i = 0; i<N; i++){
+		if(rand()%2) b[n++] = univers[i];
+	}
+	b[n] = 0;
+
+	n=0;
+	for(int i = 0; i<N; i++){
+		if(rand()%2) c[n++] = univers[i];
+	}
+	c[n] = 0;
+
+	n=0;
+	for(int i = 0; i<N; i++){
+		if(rand()%2) d[n++] = univers[i];
+	}
+	d[n]=0;
+
+
+	for(int i = 0; a[i]; ++i){
+		cout << a[i] << " ";
+	}
+	cout << endl;
+
+	for(int i = 0; b[i]; ++i){
+		cout << b[i] << " ";
+	}
+	cout << endl;
+
+	for(int i = 0; c[i]; ++i){
+		cout << c[i] << " ";
+	}
+	cout << endl;
+
+	for(int i = 0; d[i]; ++i){
+		cout << d[i] << " ";
+	}
+	cout << endl;
+
+
 	//обработка константных массивов
 		//пересечение b и c
+	n = 0;
+	memset(e, 0, sizeof(e));
 	for(int i = 0; b[i]; ++i){
 		for(int j = 0; c[j]; ++j){
 			if(b[i]==c[j]){
@@ -39,6 +87,7 @@ int main() {
 
 		//пересечение e и d
 	n = 0;
+	memset(b, 0, sizeof(b));
 	for(int i = 0; e[i]; ++i){
 		for(int j = 0; d[j]; ++j){
 			if(e[i]==d[j]){
