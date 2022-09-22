@@ -21,23 +21,21 @@ int main() {
 		El(char s, El* ptr): s(s), next(ptr){};
 
 		El(char* _val){
-			for(int i = 0; _val[i]; ++i){
-				if(_val[i+1]) 	next = new El(_val[i], next);
-				else 	s = _val[i];
-			}
+			for(int i = 0; _val[i]; ++i) push(_val[i]);
 		};
 
 		~El(){delete next;};
 
 		void push(char _val){
-
+			next = new El(s, next);
+			s = _val;
 		}
 	};
 
 	const int N = 17;
 	char univers[] = "0123456789abcdef";
 	char a[N], b[N], c[N], d[N], e[N]{}, tmp[N]{};
-	El* LA, LB, LD, LC, LE;
+	El *LA, *LB, *LD, *LC, *LE;
 
 	int n;
 	bool elem_in_c;
@@ -137,7 +135,12 @@ int main() {
 
 	//обработка списков
 	LA = new El(a);
-	for(El* p = LA; p; p=p->next){
+	LB = new El(b);
+	LC = new El(c);
+	LD = new El(d);
+
+	LA->push('g');
+	for(El* p = LA; p; p = p->next){
 		cout << p->s << " ";
 	}
 	cout << endl;
