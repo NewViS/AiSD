@@ -13,16 +13,34 @@
 using namespace std;
 
 int main() {
+	struct El{
+		char s = 0;
+		El* next = nullptr;
+
+	public:
+		El(char s, El* ptr): s(s), next(ptr){};
+
+		El(char* _val){
+			for(int i = 0; _val[i]; ++i){
+				if(_val[i+1]) 	next = new El(_val[i], next);
+				else 	s = _val[i];
+			}
+		};
+
+		~El(){delete next;};
+
+		void push(char _val){
+
+		}
+	};
+
 	const int N = 17;
 	char univers[] = "0123456789abcdef";
-	char a[N], b[N], c[N], d[N], e[N]{};
+	char a[N], b[N], c[N], d[N], e[N]{}, tmp[N]{};
+	El* LA, LB, LD, LC, LE;
+
 	int n;
 	bool elem_in_c;
-
-	struct El{
-		char s;
-		El* next;
-	};
 
 	srand(time(0));
 
@@ -87,15 +105,15 @@ int main() {
 
 		//пересечение e и d
 	n = 0;
-	memset(b, 0, sizeof(b));
+	memset(tmp, 0, sizeof(tmp));
 	for(int i = 0; e[i]; ++i){
 		for(int j = 0; d[j]; ++j){
 			if(e[i]==d[j]){
-				b[n++]=e[i];
+				tmp[n++]=e[i];
 			}
 		}
 	}
-	b[n]=0;
+	tmp[n]=0;
 
 		//объединение a и b
 
@@ -106,21 +124,28 @@ int main() {
 		e[n++]=a[i];
 	}
 	e[n]=0;
-	for(int i = 0; b[i]; ++i){
+	for(int i = 0; tmp[i]; ++i){
 		elem_in_c = false;
 		for(int j = 0; e[j]; ++j){
-			if(b[i]==e[j]){
+			if(tmp[i]==e[j]){
 				elem_in_c = true;
 			}
 		}
-		if(!elem_in_c)	e[n++]=b[i];
+		if(!elem_in_c)	e[n++]=tmp[i];
 	}
 	e[n]=0;
 
 	//обработка списков
+	LA = new El(a);
+	for(El* p = LA; p; p=p->next){
+		cout << p->s << " ";
+	}
+	cout << endl;
 
 	for(int i = 0; e[i]; ++i){
 		cout << e[i] << " ";
 	}
+
+	delete LA;
 	return 0;
 }
