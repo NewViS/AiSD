@@ -18,6 +18,8 @@ int main() {
 		El* next = nullptr;
 
 	public:
+		El(){};
+
 		El(char s, El* ptr): s(s), next(ptr){};
 
 		El(char* _val){
@@ -35,7 +37,7 @@ int main() {
 	const int N = 17;
 	char univers[] = "0123456789abcdef";
 	char a[N], b[N], c[N], d[N], e[N]{}, tmp[N]{};
-	El *LA, *LB, *LD, *LC, *LE;
+	El *LA, *LB, *LD, *LC, *LE, *LTmp;
 
 	int n;
 	bool elem_in_c;
@@ -133,22 +135,53 @@ int main() {
 	}
 	e[n]=0;
 
+	for(int i = 0; e[i]; ++i){
+			cout << e[i] << " ";
+		}
+	cout << endl<< endl;
+
 	//обработка списков
 	LA = new El(a);
 	LB = new El(b);
 	LC = new El(c);
 	LD = new El(d);
+	LE = new El();
+	LTmp = new El();
 
-	LA->push('g');
-	for(El* p = LA; p; p = p->next){
+	//пересечение b и c
+	for(El* p = LB; p; p = p->next)
+		for(El* u = LC; u; u=u->next)
+			if(p->s==u->s)
+				LE->push(p->s);
+
+		//пересечение e и d
+	for(El* p = LE; p; p=p->next)
+		for(El* u = LD; u; u=u->next)
+			if(u->s==p->s)
+				LTmp->push(u->s);
+
+		//объединение a и b
+	LE = LA;
+	for(El* p = LTmp; p; p = p->next){
+		elem_in_c = false;
+		for(El* u = LE; u; u = u->next)
+			if(p->s==u->s)
+				elem_in_c = true;
+
+		if(!elem_in_c)	LE->push(p->s);
+	}
+
+	for(El* p = LE; p; p = p->next){
 		cout << p->s << " ";
 	}
 	cout << endl;
 
-	for(int i = 0; e[i]; ++i){
-		cout << e[i] << " ";
-	}
 
-	delete LA;
+	delete(LA);
+	delete(LB);
+	delete(LC);
+	delete(LD);
+	delete(LE);
+	delete(LTmp);
 	return 0;
 }
