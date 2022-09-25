@@ -2,8 +2,7 @@
 // Name        : lab1.cpp
 // Author      : Pesterev
 // Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : Анализ скорости работы алгоритмов над множествами
 //============================================================================
 
 #include <iostream>
@@ -38,6 +37,8 @@ int main() {
 	char univers[] = "0123456789abcdef";
 	char a[N], b[N], c[N], d[N], e[N]{}, tmp[N]{};
 	El *LA, *LB, *LD, *LC, *LE, *LTmp;
+	bool bit_a[N-1]{}, bit_b[N-1]{}, bit_c[N-1]{}, bit_d[N-1]{}, bit_e[N-1]{};
+	unsigned short us_a=0, us_b=0, us_c=0, us_d=0, us_e = 0;
 
 	int n;
 	bool elem_in_c;
@@ -45,29 +46,44 @@ int main() {
 	srand(time(0));
 
 	n=0;
-	for(int i = 0; i<N; i++){
-		if(rand()%2) a[n++] = univers[i];
+	for(int i = 0; i<N-1; i++){
+		bool j = rand()%2;
+		bit_a[i] = j;
+		if(j) a[n++] = univers[i];
+		us_a += j << i;
 	}
 	a[n] = 0;
+	LA = new El(a);
 
 	n=0;
-	for(int i = 0; i<N; i++){
-		if(rand()%2) b[n++] = univers[i];
+	for(int i = 0; i<N-1; i++){
+		bool j = rand()%2;
+		bit_b[i] = j;
+		if(j) b[n++] = univers[i];
+		us_b += j << i;
 	}
 	b[n] = 0;
+	LB = new El(b);
 
 	n=0;
-	for(int i = 0; i<N; i++){
-		if(rand()%2) c[n++] = univers[i];
+	for(int i = 0; i<N-1; i++){
+		bool j = rand()%2;
+		bit_c[i] = j;
+		if(j) c[n++] = univers[i];
+		us_c += j << i;
 	}
 	c[n] = 0;
+	LC = new El(c);
 
 	n=0;
-	for(int i = 0; i<N; i++){
-		if(rand()%2) d[n++] = univers[i];
+	for(int i = 0; i<N-1; i++){
+		bool j = rand()%2;
+		bit_d[i] = j;
+		if(j) d[n++] = univers[i];
+		us_d += j << i;
 	}
 	d[n]=0;
-
+	LD = new El(d);
 
 	for(int i = 0; a[i]; ++i){
 		cout << a[i] << " ";
@@ -93,7 +109,7 @@ int main() {
 	//обработка константных массивов
 		//пересечение b и c
 	n = 0;
-	memset(e, 0, sizeof(e));
+
 	for(int i = 0; b[i]; ++i){
 		for(int j = 0; c[j]; ++j){
 			if(b[i]==c[j]){
@@ -105,7 +121,7 @@ int main() {
 
 		//пересечение e и d
 	n = 0;
-	memset(tmp, 0, sizeof(tmp));
+
 	for(int i = 0; e[i]; ++i){
 		for(int j = 0; d[j]; ++j){
 			if(e[i]==d[j]){
@@ -118,7 +134,6 @@ int main() {
 		//объединение a и b
 
 	n = 0;
-	memset(e, 0, sizeof(e));
 
 	for(int i = 0; a[i]; ++i){
 		e[n++]=a[i];
@@ -141,10 +156,7 @@ int main() {
 	cout << endl<< endl;
 
 	//обработка списков
-	LA = new El(a);
-	LB = new El(b);
-	LC = new El(c);
-	LD = new El(d);
+
 	LE = new El();
 	LTmp = new El();
 
@@ -176,6 +188,20 @@ int main() {
 	}
 	cout << endl;
 
+	//массив битов
+	for(int i = 0; i<N-1; i++)
+			bit_e[i] = bit_a[i]||(bit_b[i] && bit_c[i] && bit_d[i]);
+
+	for(int i = 0; i<N-1; i++)
+		if(bit_e[i])	cout << univers[i]<< " ";
+	cout << endl;
+
+	//машинное слово
+	us_e = us_a|(us_b & us_c & us_d);
+
+	for(int i = 0; i<N; i++)
+		if(us_e & 1 << i)	cout << univers[i]<< " ";
+	cout << endl;
 
 	delete(LA);
 	delete(LB);
