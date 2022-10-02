@@ -6,6 +6,7 @@
 //============================================================================
 
 #include <iostream>
+#include <iomanip>
 #include <cstring>
 #include <time.h>
 
@@ -25,7 +26,11 @@ int main() {
 			for(int i = 0; _val[i]; ++i) push(_val[i]);
 		};
 
-		~El(){delete next;};
+		~El(){
+			delete next;
+			next = nullptr;
+			s = 0;
+		};
 
 		void push(char _val){
 			next = new El(s, next);
@@ -42,7 +47,9 @@ int main() {
 
 	int n;
 	bool elem_in_c;
+	clock_t t[4];
 
+	setlocale(LC_ALL, "");
 	srand(time(0));
 
 	n=0;
@@ -85,21 +92,25 @@ int main() {
 	d[n]=0;
 	LD = new El(d);
 
+	cout << "Множество А: ";
 	for(int i = 0; a[i]; ++i){
 		cout << a[i] << " ";
 	}
 	cout << endl;
 
+	cout << "Множество B: ";
 	for(int i = 0; b[i]; ++i){
 		cout << b[i] << " ";
 	}
 	cout << endl;
 
+	cout << "Множество C: ";
 	for(int i = 0; c[i]; ++i){
 		cout << c[i] << " ";
 	}
 	cout << endl;
 
+	cout << "Множество D: ";
 	for(int i = 0; d[i]; ++i){
 		cout << d[i] << " ";
 	}
@@ -108,6 +119,9 @@ int main() {
 
 	//обработка константных массивов
 		//пересечение b и c
+	t[0] = clock();
+	for(int iterate = 0; iterate < 1000000; ++iterate){
+
 	n = 0;
 
 	for(int i = 0; b[i]; ++i){
@@ -150,30 +164,51 @@ int main() {
 	}
 	e[n]=0;
 
+	for (int i = 0; e[i]; ++i) {
+		for (int j = i + 1; e[j]; ++j) {
+			if (e[i] > e[j]) {
+				tmp[0] = e[i];
+				e[i] = e[j];
+				e[j] = tmp[0];
+			}
+		}
+	}
+
+	}
+	t[0]=clock()-t[0];
+
 	for(int i = 0; e[i]; ++i){
 			cout << e[i] << " ";
 		}
-	cout << endl<< endl;
+	cout << endl << t << endl;
 
 	//обработка списков
+
+	t[1] = clock();
+	for(int iterate = 0; iterate < 1000000; ++iterate){
 
 	LE = new El();
 	LTmp = new El();
 
-	//пересечение b и c
+		//пересечение b и c
+	LE->~El();
 	for(El* p = LB; p; p = p->next)
 		for(El* u = LC; u; u=u->next)
 			if(p->s==u->s)
 				LE->push(p->s);
 
 		//пересечение e и d
+	LTmp->~El();
 	for(El* p = LE; p; p=p->next)
 		for(El* u = LD; u; u=u->next)
 			if(u->s==p->s)
 				LTmp->push(u->s);
 
 		//объединение a и b
-	LE = LA;
+	LE->~El();
+	for(El* p = LA; p && p->s; p = p->next){
+		LE->push(p->s);
+	}
 	for(El* p = LTmp; p; p = p->next){
 		elem_in_c = false;
 		for(El* u = LE; u; u = u->next)
@@ -183,25 +218,48 @@ int main() {
 		if(!elem_in_c)	LE->push(p->s);
 	}
 
+	for (El* p = LE; p && p->s; p= p->next) {
+		for (El* q = p->next; q && q->s; q=q->next) {
+			if (p->s > q->s) {
+				tmp[0] = p->s;
+				p->s = q->s;
+				q->s = tmp[0];
+			}
+		}
+	}
+	}
+	t[1]=clock()-t[1];
+
 	for(El* p = LE; p; p = p->next){
 		cout << p->s << " ";
 	}
-	cout << endl;
+	cout << endl<< t << endl;
 
 	//массив битов
+	t[2] = clock();
+	for(int iterate = 0; iterate < 1000000; ++iterate){
 	for(int i = 0; i<N-1; i++)
 			bit_e[i] = bit_a[i]||(bit_b[i] && bit_c[i] && bit_d[i]);
-
+	}
+	t[2]=clock()-t[2];
 	for(int i = 0; i<N-1; i++)
 		if(bit_e[i])	cout << univers[i]<< " ";
-	cout << endl;
+	cout << endl<< t<< endl;
 
 	//машинное слово
+	t[3] = clock();
+	for(int iterate = 0; iterate < 1000000; ++iterate){
 	us_e = us_a|(us_b & us_c & us_d);
-
+	}
+	t[3]=clock()-t[3];
 	for(int i = 0; i<N; i++)
 		if(us_e & 1 << i)	cout << univers[i]<< " ";
-	cout << endl;
+	cout << endl<< t<< endl;
+
+	cout.fill('-');
+	cout << "+-----------------+"<<setw(50)<<"+-----------------+"<< endl;
+	cout << "| Способ хранения | Множество E | Время обработки |"<<endl;
+	cout << "| Способ хранения | Множество E | Время обработки |"<<setw(50)<<endl;
 
 	delete(LA);
 	delete(LB);
