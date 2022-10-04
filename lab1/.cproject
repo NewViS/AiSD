@@ -117,8 +117,14 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.203646430;cdt.managedbuild.config.gnu.cross.exe.debug.203646430.;cdt.managedbuild.tool.gnu.cross.c.compiler.1128969674;cdt.managedbuild.tool.gnu.c.compiler.input.1810401709">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.203646430;cdt.managedbuild.config.gnu.cross.exe.debug.203646430.;org.eclipse.cdt.msvc.cl.c.dll.debug.922363537;org.eclipse.cdt.msvc.cl.inputType.c.1817361161">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.msw.build.clScannerInfo"/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.13485415;cdt.managedbuild.config.gnu.cross.exe.release.13485415.;cdt.managedbuild.tool.gnu.cross.c.compiler.953291778;cdt.managedbuild.tool.gnu.c.compiler.input.1211618108">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.203646430;cdt.managedbuild.config.gnu.cross.exe.debug.203646430.;org.eclipse.cdt.msvc.cl.dll.debug.2043666818;org.eclipse.cdt.msvc.cl.inputType.646768613">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.msw.build.clScannerInfo"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.13485415;cdt.managedbuild.config.gnu.cross.exe.release.13485415.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.821192263;cdt.managedbuild.tool.gnu.cpp.compiler.input.988275775">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
