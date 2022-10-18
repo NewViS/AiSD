@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include <random>
+#include <cstring>
 
 #pragma once
 using namespace std;
@@ -22,6 +23,7 @@ public:
 
 	Set();
 	Set(const Set&);
+	Set(char *B);
 
 	Set& operator &=(const Set &B);
 	Set& operator |=(const Set &B);
@@ -32,10 +34,13 @@ public:
 
 	~Set() {
 		delete[] A;
+		if(isOutput) cout << S <<" deleted"<< endl;
+		//cnt--;
 	}
 
 	void show();
 	void fillRand();
+	void alphSort(const Set &B);
 
 };
 int Set::N = 16;
@@ -55,15 +60,41 @@ void Set::fillRand() {
 	A[n] = 0;
 }
 
+void Set::alphSort(const Set &B){
+	char tmp;
+	for (int i = 0; B.A[i]; ++i) {
+				for (int j = i + 1; B.A[j]; ++j) {
+					if (B.A[i] > B.A[j]) {
+						tmp = B.A[i];
+						B.A[i] = B.A[j];
+						B.A[j] = tmp;
+					}
+				}
+			}
+
+	if(isOutput) cout << B.S << " sorted" << endl;
+}
+
+Set::Set(char *B) : n(0), S('A' + cnt++), A(new char[N + 1])  {
+	for (int i = 0; B[i]; ++i)
+		A[n++] = B[i];
+
+	A[n] = 0;
+	if(isOutput) cout << S << " created"<<endl;
+}
+
 Set::Set() :
 		n(0), S('A' + cnt++), A(new char[N + 1]) {
 	A[0] = 0;
+
+	if(isOutput) cout << S << " created"<<endl;
 }
 
 Set::Set(const Set &B) :
 		S('A' + cnt++), n(B.n), A(new char[N + 1]) {
 	char *dst(A), *src(B.A);
 	while (*dst++ = *src++);
+	if(isOutput) cout << S << " created"<<endl;
 }
 
 Set& Set::operator &=(const Set &B) {
@@ -77,12 +108,16 @@ Set& Set::operator &=(const Set &B) {
 	}
 	A[n] = 0;
 
+	if(isOutput) cout << S << " &= " << B.S << endl;
+	cnt--;
 	return *this;
 }
 
 Set Set::operator &(const Set &B) const {
 	Set C(*this);
-	return (C &= B);
+	C &= B;
+	if(isOutput) cout << C.S << " = " << B.S <<" & "<< S << endl;
+	return C;
 }
 
 Set& Set::operator |=(const Set &B) {
@@ -96,12 +131,18 @@ Set& Set::operator |=(const Set &B) {
 			A[n++] = B.A[i];
 	}
 	A[n] = 0;
+
+	alphSort(*this);
+
+	if(isOutput) cout << S << " |= " << B.S << endl;
 	return *this;
 }
 
 Set Set::operator |(const Set &B) const {
 	Set C(*this);
-	return (C |= B);
+	C |= B;
+	if(isOutput) cout << C.S << " = " << B.S <<" | "<< S << endl;
+	return C;
 
 }
 
@@ -111,8 +152,9 @@ Set& Set::operator =(const Set &B) {
 		n = B.n;
 		while (*dst++ = *src++)
 			;
-		S = 'A' + cnt++;
 	}
+
+	if(isOutput) cout << S << " = " << B.S << endl;
 	return *this;
 }
 
