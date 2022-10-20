@@ -12,7 +12,9 @@
 
 using namespace std;
 //#include "array.h"
-#include "bits_arr.h"
+#include "list.h"
+//#include "bits_arr.h"
+//#include "bits.h"
 
 int main() {
 	locale::global(locale("Russian"));
@@ -20,7 +22,7 @@ int main() {
 
 	int iterate = 1000000;
 
-	Set::isOutput = false;
+	Set::isOutput = true;
 
 	//Set A("034789ab"), B("01245789cf"), C("345678abf"), D("0489bcdf"), E;
 	//Set A("14689ef"), B("68bcdf"), C("02479abcd"), D("01389abe"), E;
