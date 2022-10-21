@@ -33,9 +33,8 @@ public:
 	Set& operator =(const Set &B);
 
 	~Set() {
+		if(isOutput) cout << "Удалено " << S << "(" << dec << n << ") = [" << A << "]" << endl;
 		delete[] A;
-		if(isOutput) cout << S <<" deleted"<< endl;
-		//cnt--;
 	}
 
 	void show();
@@ -49,15 +48,17 @@ char Set::univers[] = "0123456789abcdef";
 bool Set::isOutput = false;
 
 void Set::show() {
-	cout << S << "=[" << A << "]" << endl;
+	cout << S <<"(" << n << ")" << " = [" << A << "]" << endl;
 }
 
 void Set::fillRand() {
+	n = 0;
 	for (int i = 0; i < N; ++i)
 		if (rand() % 2)
 			A[n++] = univers[i];
 
 	A[n] = 0;
+	cout << "Заполнено случайными числами " << S <<"(" << n << ")" << " = [" << A << "]" << endl;
 }
 
 void Set::alphSort(const Set &B){
@@ -72,7 +73,7 @@ void Set::alphSort(const Set &B){
 				}
 			}
 
-	if(isOutput) cout << B.S << " sorted" << endl;
+	if(isOutput) cout << "Выполнена сортировка " << B.S <<"(" << B.n << ")" << " = [" << B.A << "]" << endl;
 }
 
 Set::Set(char *B) : n(0), S('A' + cnt++), A(new char[N + 1])  {
@@ -80,21 +81,21 @@ Set::Set(char *B) : n(0), S('A' + cnt++), A(new char[N + 1])  {
 		A[n++] = B[i];
 
 	A[n] = 0;
-	if(isOutput) cout << S << " created"<<endl;
+	if(isOutput) cout <<"Создано " << S <<"(" << n << ")" << " = [" << A << "]" << endl;
 }
 
 Set::Set() :
 		n(0), S('A' + cnt++), A(new char[N + 1]) {
 	A[0] = 0;
 
-	if(isOutput) cout << S << " created"<<endl;
+	if(isOutput) cout <<"Создано пустое " << S <<"(" << n << ")" << " = [" << A << "]" << endl;
 }
 
 Set::Set(const Set &B) :
 		S('A' + cnt++), n(B.n), A(new char[N + 1]) {
 	char *dst(A), *src(B.A);
 	while (*dst++ = *src++);
-	if(isOutput) cout << S << " created"<<endl;
+	if(isOutput) cout <<"Создано " << S <<"(" << n << ")" << " = [" << A << "] из " << B.S <<"(" << B.n << ")" << " = [" << B.A << "]" << endl;
 }
 
 Set& Set::operator &=(const Set &B) {
@@ -108,7 +109,7 @@ Set& Set::operator &=(const Set &B) {
 	}
 	A[n] = 0;
 
-	if(isOutput) cout << S << " &= " << B.S << endl;
+	if(isOutput) cout << "Вычислено " << S <<"(" << n << ")" << " = [" << A << "] = " << C.S <<" & " << B.S << endl;
 	cnt--;
 	return *this;
 }
@@ -116,7 +117,7 @@ Set& Set::operator &=(const Set &B) {
 Set Set::operator &(const Set &B) const {
 	Set C(*this);
 	C &= B;
-	if(isOutput) cout << C.S << " = " << B.S <<" & "<< S << endl;
+	if(isOutput) cout << "Вычислено " << C.S <<"(" << C.n << ")" << " = [" << C.A << "] = " << B.S <<" & "<< S << endl;
 	return C;
 }
 
@@ -134,14 +135,14 @@ Set& Set::operator |=(const Set &B) {
 
 	alphSort(*this);
 
-	if(isOutput) cout << S << " |= " << B.S << endl;
+	if(isOutput) cout << "Вычислено " << S <<"(" << n << ")" << " = [" << A << "] = " << S <<" | " << B.S << endl;
 	return *this;
 }
 
 Set Set::operator |(const Set &B) const {
 	Set C(*this);
 	C |= B;
-	if(isOutput) cout << C.S << " = " << B.S <<" | "<< S << endl;
+	if(isOutput) cout << "Вычислено " << C.S <<"(" << C.n << ")" << " = [" << C.A << "] = " << B.S <<" | "<< S << endl;
 	return C;
 
 }
@@ -154,7 +155,7 @@ Set& Set::operator =(const Set &B) {
 			;
 	}
 
-	if(isOutput) cout << S << " = " << B.S << endl;
+	if(isOutput) cout << S << " = " << B.S <<"("<<n<<") = ["<< A << "]"<< endl;
 	return *this;
 }
 
