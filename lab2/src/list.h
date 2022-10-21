@@ -11,19 +11,20 @@ using namespace std;
 class El {
     char e;
     El* next;
-    static const int maxmup = 300;
+    static const int maxmup = 100000000;
     static El mem[maxmup]; //Свободная память для элементов спис-ков
     static int mup, mup0;
 public:
+    static bool isOutput;
     El() : e('!'), next(nullptr) { }
-    El(char e, El* n = nullptr) : e(e), next(n) { cout << "+" << e; }
+    El(char e, El* n = nullptr) : e(e), next(n) { if(isOutput) cout << "+" << e; }
     ~El() {
         if (this) { //Проверка обязательна
             if (next) { delete next; }
-            cout << "-" << e;
+            if(isOutput) cout << "-" << e;
             e = '*';
         }
-        else cout << "<Пусто!>";
+        else if(isOutput) cout << "<Пусто!>";
     }
     static void* operator new(size_t) {
         return (mup < maxmup ? &mem[mup++] : nullptr);
@@ -42,6 +43,7 @@ std::ostream& operator << (std::ostream& o, El& S)
     return o;
 }
 
+bool El::isOutput = false;
 El El::mem[El::maxmup];  //"Свободная память"
 int El::mup = 0, El::mup0 = 0;
 
@@ -70,7 +72,8 @@ public:
     Set& operator = (const Set&);
     ~Set() {
         if(isOutput) cout << "Удалено " << S << "(" << std::dec << n << ") = [" << *A << "]";
-        A->El::~El(); cout << std::endl;
+        A->El::~El();
+        if(isOutput) cout << std::endl;
     }
 
     void show();
@@ -89,7 +92,7 @@ bool Set::isOutput = false;
 
 Set::Set() : n(0), S('A' + cnt++), A(nullptr)
 {
-    cout << "-> Created " << S << "(" << n << ") = [" << *A << "] \n";
+    if(isOutput) cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] \n";
 }
 
 /*Set::Set(char) : S('A' + num++), n(0)
@@ -109,13 +112,13 @@ Set::Set(char *B) : n(0), S('A' + cnt++){
 		++n;
 		}
 
-	if(isOutput) cout << S << " created"<<endl;
+	if(isOutput) cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] \n";
 }
 
 Set::Set(const Set& B) : n(B.n), S('A' + cnt++), A(nullptr)
 {
     for (El* p = B.A; p; p = p->next) A = new El(p->e, A);
-    std::cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
+    if(isOutput) cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
 }
 
 /*Set::Set(Set&& B) : n(B.n), S('A' + num++), A(B.A)
@@ -134,13 +137,13 @@ Set& Set::operator &= (const Set& B)
                 C.A = new El(i->e, C.A), ++C.n;
     }
     swap(C);
-    std::cout << "; Получено " << S << "(" << n << ") = [" << *A << "] = " << C.S << "&" << B.S << std::endl;
+    if(isOutput) cout << "; Получено " << S << "(" << n << ") = [" << *A << "] = " << C.S << "&" << B.S << endl;
     return *this;
 }
 Set Set::operator & (const Set& B) const
 {
     Set C(*this);
-    std::cout << "Вычисление " << C.S << " & " << B.S << std::endl;
+    if(isOutput) cout << "Вычисление " << C.S << " & " << B.S << endl;
     return C &= B;
 }
 
@@ -156,13 +159,13 @@ Set& Set::operator |= (const Set& B)
             C.A = new El(i->e, C.A), ++C.n;
     }
     swap(C);
-    std::cout << "; Получено " << S << "(" << n << ") = [" << *A << "] = " << C.S << "|" << B.S << std::endl;
+    if(isOutput) cout << "; Получено " << S << "(" << n << ") = [" << *A << "] = " << C.S << "|" << B.S << endl;
     return *this;
 }
 Set Set::operator | (const Set& B) const
 {
     Set C(*this);
-    std::cout << "Вычисление " << C.S << " | " << B.S << std::endl;
+    if(isOutput) cout << "Вычисление " << C.S << " | " << B.S << endl;
     return C |= B;
 }
 
@@ -170,31 +173,21 @@ Set& Set::operator = (const Set& B)
 {
     if (this != &B)
     {
-        std::cout << "\nУдалено " << S << "(" << n << ") = [" << *A << "]";
+        if(isOutput) cout << "\nУдалено " << S << "(" << n << ") = [" << *A << "]";
         delete A;
         A = nullptr;
         n = 0;
         for (El* p = B.A; p; p = p->next)
             A = new El(p->e, A), ++n;
-        S = 'A' + cnt++;
+
     }
-    std::cout << "; Создано " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
+    if(isOutput) cout << "; Создано " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
     return *this;
 }
 
-/*Set& Set::operator = (Set&& B)
-{
-    std::cout << "\nУдалено " << S << "(" << n << ") = [" << *A << "]";
-    swap(B);
-    delete B.A; B.A = nullptr;
-    S = 'A' + num++;
-    std::cout << "; ПЕРЕДАНО " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
-    return *this;
-}*/
-
 void Set::show()
 {
-    std::cout << '\n' << S <<  " = [";
-    for (El* p = A; p; p = p->next) std::cout << p->e << " ";
-    std::cout << "]\n\n";
+    cout << S <<  " = [";
+    for (El* p = A; p; p = p->next) cout << p->e << " ";
+    cout << "]\n";
 }
