@@ -22,12 +22,12 @@ int main() {
 
 	int iterate = 1000000;
 
-	//El::isOutput = false;
-	Set::isOutput = false;
+	//El::isOutput = true;
+	Set::isOutput = true;
 
-	//Set A("034789ab"), B("01245789cf"), C("345678abf"), D("0489bcdf"), E;
+	Set A("034789ab"), B("01245789cf"), C("345678abf"), D("0489bcdf"), E;
 	//Set A("14689ef"), B("68bcdf"), C("02479abcd"), D("01389abe"), E;
-	Set A("3ef"), B("1589ef"), C("4578bde"), D("012345678bcf"), E;
+	//Set A("3ef"), B("1589ef"), C("4578bde"), D("012345678bcf"), E;
 
 	clock_t t;
 

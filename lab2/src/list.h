@@ -77,6 +77,7 @@ public:
     }
 
     void show();
+    void alphSort(const Set &B);
     int power() { return n; }
     void swap(Set& other) { std::swap(S, other.S); std::swap(n, other.n); std::swap(A, other.A); }
     Set& operator |= (const Set&);
@@ -95,15 +96,6 @@ Set::Set() : n(0), S('A' + cnt++), A(nullptr)
     if(isOutput) cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] \n";
 }
 
-/*Set::Set(char) : S('A' + num++), n(0)
-{
-    A = nullptr;
-    for (int i = 0; i < N; i++)
-        if (rand() % 2)
-            A = new El(i + 'a', A), ++n;
-    std::cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] \n";
-}*/
-
 Set::Set(char *B) : n(0), S('A' + cnt++){
 	A = nullptr;
 	for (int i = 0; B[i]; ++i)
@@ -121,11 +113,20 @@ Set::Set(const Set& B) : n(B.n), S('A' + cnt++), A(nullptr)
     if(isOutput) cout << "-> Создано " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
 }
 
-/*Set::Set(Set&& B) : n(B.n), S('A' + num++), A(B.A)
-{
-    B.A = nullptr;
-    std::cout << "-> ПРИНЯТО " << S << "(" << n << ") = [" << *A << "] из " << B.S << std::endl;
-}*/
+void Set::alphSort(const Set &B){
+	char tmp;
+	for (El *p = B.A; p; p = p->next) {
+				for (El *q = p->next; q; q = q->next) {
+					if (p->e > q->e) {
+						tmp = p->e;
+						p->e = q->e;
+						q->e = tmp;
+					}
+				}
+			}
+
+	if(isOutput) cout << "Выполнена сортировка " << B.S <<"(" << B.n << ")" << " = [" << *B.A << "]" << endl;
+}
 
 Set& Set::operator &= (const Set& B)
 {
@@ -159,6 +160,7 @@ Set& Set::operator |= (const Set& B)
             C.A = new El(i->e, C.A), ++C.n;
     }
     swap(C);
+    alphSort(*this);
     if(isOutput) cout << "; Получено " << S << "(" << n << ") = [" << *A << "] = " << C.S << "|" << B.S << endl;
     return *this;
 }
