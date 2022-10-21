@@ -71,7 +71,7 @@ Tree::~Tree() {
 
 Node* Tree::makeNode(int depth) {
 	Node *v = nullptr;
-	int Y = (depth < rand() % 6 + 1) && (num <= maxnum);
+	int Y = (depth < rand() % maxrow + 1) && (num <= maxnum);
 	if (Y) { // создание узла, если Y = 1
 		v = new Node;
 		v->d = num++;
@@ -145,7 +145,7 @@ void Tree::printBT() {
 int Tree::heigh(Node *nd) {
 	int len = -1;
 	if (nd) {
-		if (nd->lft == nullptr || nd->mdl == nullptr || nd->rgt == nullptr) {
+		if (nd->lft != nullptr || nd->mdl != nullptr || nd->rgt != nullptr) {
 			len = max(max(heigh(nd->lft), heigh(nd->mdl)), heigh(nd->rgt));
 		} else
 			len = 0;
@@ -170,12 +170,12 @@ int main() {
 	Tr.makeTree();
 	if (Tr.exist()) {
 		Tr.printBT();
-		cout << '\n' << "Obhod v shirinu: ";
+		cout << '\n' << "Обход графа в ширину: ";
 		n = Tr.BFS();
-		cout << " Uzlov: " << n << endl;
-		cout << Tr.midLen();
+		cout << " Количество узлов: " << n << endl;
+		cout <<"Длина среднего поддерева: " << Tr.midLen();
 	} else
-		cout << "pusto";
+		cout << "Пусто!";
 
 	return 0;
 }
