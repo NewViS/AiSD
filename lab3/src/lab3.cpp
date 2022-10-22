@@ -72,14 +72,22 @@ Tree::~Tree() {
 
 Node* Tree::makeNode(int depth) {
 	Node *v = nullptr;
-	int Y = (depth < rand() % maxrow + 1) && (num <= maxnum);
-	if (Y) { // создание узла, если Y = 1
-		v = new Node;
-		v->d = num++;
-		if (depth < maxrow) {
-			v->lft = makeNode(depth + 1);
-			v->mdl = makeNode(depth + 1);
-			v->rgt = makeNode(depth + 1);
+
+	if (num <= maxnum) {
+		int Y = (depth < rand() % maxrow + 1);
+		/*
+		cout << "Node (" << num << ',' << depth << ")1/0: ";
+		cin >> Y;
+		 */
+
+		if (Y) { // создание узла, если Y = 1
+			v = new Node;
+			v->d = num++;
+			if (depth < maxrow) {
+				v->lft = makeNode(depth + 1);
+				v->mdl = makeNode(depth + 1);
+				v->rgt = makeNode(depth + 1);
+			}
 		}
 	}
 	return v;
