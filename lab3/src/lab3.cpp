@@ -17,6 +17,7 @@ using namespace std;
 class Node {
 	char d;
 	Node *lft, *mdl, *rgt;
+	int deep = 0;
 public:
 	Node() :
 			lft(nullptr), mdl(nullptr), rgt(nullptr) {
@@ -142,7 +143,7 @@ void Tree::printBT() {
 	printBT("", root, 3, false);
 }
 
-int Tree::heigh(Node *nd) {
+/*int Tree::heigh(Node *nd) {
 	int len = -1;
 	if (nd) {
 		if (nd->lft != nullptr || nd->mdl != nullptr || nd->rgt != nullptr) {
@@ -151,11 +152,39 @@ int Tree::heigh(Node *nd) {
 			len = 0;
 	}
 	return len + 1;
+}*/
+
+int Tree::heigh(Node *nd) {
+	int len = 0;
+	queue<Node*> Q;  //создание очереди указателей на узлы
+	Q.push(nd); // поместить в очередь корень дерева
+	if (nd)
+		nd->deep = 1;
+	while (!Q.empty()) //пока очередь не пуста
+	{
+		Node *v = Q.front();
+		Q.pop(); // взять из очереди,
+		if (v->lft) {
+			Q.push(v->lft); // Q <- (левый сын)
+			v->lft->deep = v->deep + 1;
+		}
+		if (v->mdl) {
+			Q.push(v->mdl);
+			v->mdl->deep = v->deep + 1;
+		}
+		if (v->rgt) {
+			Q.push(v->rgt); // Q <- (правый сын)
+			v->rgt->deep = v->deep + 1;
+		}
+
+		len = max(len, v->deep);
+	}
+	return len;
 }
 
 int Tree::midLen() {
 	int len = 0;
-	if (root) {
+	if (root && root->mdl) {
 		len = heigh(root->mdl);
 	}
 	return len;
