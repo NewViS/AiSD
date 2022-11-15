@@ -7,7 +7,8 @@
 //============================================================================
 
 #include <iostream>
-#include <iomanip>
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <set>
 #include <stack>
@@ -30,8 +31,8 @@ public:
 
 class Set {
 	char name;
-	vector<Elem*> elems;
-	static vector<Elem*> univers;
+	vector<Elem*> elems; //элементы множества
+	static vector<Elem*> univers; //уникальные элементы множеств
 
 public:
 	Set(char nm, vector<string> els);
@@ -45,8 +46,9 @@ public:
 	}
 
 	Elem* findElem(int, vector<Elem*>);
-	Elem* findMinPar();
-	void decreaseChild();
+	Elem* findMinPar(); //нахождение элемента с мин количество родителей
+	void decreaseChild(); //уменьшение количества родителей для всех детей, входящих в множество
+	void dShow();
 	friend class Graph;
 };
 vector<Elem*> Set::univers = {};
@@ -73,6 +75,14 @@ Elem* Set::findElem(int ID, vector<Elem*> vec){
 	return A;
 }
 
+void Set::dShow(){
+	cout << name <<endl;
+	for (vector<Elem*>::iterator iter = elems.begin(); iter != elems.end();
+			iter++) {
+		(*iter)->dShow();
+	}
+}
+
 void Set::decreaseChild(){
 	for (vector<Elem*>::iterator iter = elems.begin(); iter != elems.end();
 				iter++){
@@ -97,16 +107,17 @@ Set::Set(char nm, vector<string> els):name(nm){
 					elems.push_back(A);
 				}
 
-				A->dShow();
+				//A->dShow();
 			}
 		}
 	}
 }
 
 class Graph {
-	vector<Set*> sets;
+	vector<Set*> sets; //набор множеств
 public:
-	Graph(vector<vector<string>> v);
+	Graph(vector<vector<string>> v); //входные значения
+	Graph(string filename); //файл входных значений
 	~Graph(){
 		for (vector<Set*>::iterator iter = sets.begin();
 				iter != sets.end(); iter++) {
@@ -115,13 +126,53 @@ public:
 		sets.clear();
 	}
 	string transversal();
+	void dShow();
 };
 
 Graph::Graph(vector<vector<string>> v){
+	int cnt = 0;
 	for (vector<vector<string>>::iterator iter = v.begin(); iter != v.end();
 				iter++) {
-		sets.push_back(new Set('A', *iter));
+		sets.push_back(new Set('A'+ cnt, *iter));
+		++cnt;
 	}
+}
+
+Graph::Graph(string filename) {
+	vector<vector<string>> vec;
+	vector<string> els;
+	string line;
+	ifstream infile(filename);
+	if (infile.bad()) {
+		cout << "\nФайл in.txt недоступен";
+		exit(1);
+	}
+	else{
+		while (infile>>line)
+		{
+			els = {};
+			cout << line << endl;
+			stringstream ss(line);
+			while(getline(ss, line, ';')){
+			    els.push_back(line);
+			}
+			vec.push_back(els);
+		}
+	}
+
+	int cnt = 0;
+		for (vector<vector<string>>::iterator iter = vec.begin(); iter != vec.end();
+					iter++) {
+			sets.push_back(new Set('A'+ cnt, *iter));
+			++cnt;
+		}
+}
+
+void Graph::dShow(){
+	for (vector<Set*>::iterator iter = sets.begin();
+					iter != sets.end(); iter++) {
+				(*iter)->dShow();
+			}
 }
 
 string Graph::transversal(){
@@ -142,8 +193,12 @@ string Graph::transversal(){
 
 
 int main() {
-	Graph gr =Graph({{"1","4","5"},{"1"},{"2","3","4"},{"2","4"},{"2"},{"3"}});
+	//Graph gr =Graph({{"1","4","5"},{"1"},{"2","3","4"},{"2","4"}});
 
-	cout << setw(10) << gr.transversal() << endl; // prints
+	Graph gr = Graph("in.txt");
+	gr.dShow();
+	cout << gr.transversal() << endl; // prints
+
+	//gr.dShow();
 	return 0;
 }

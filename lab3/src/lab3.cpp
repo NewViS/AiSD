@@ -3,7 +3,7 @@
 // Author      : Pesterev
 // Version     :
 // Copyright   : 
-// Description : Hello World in C++, Ansi-style
+// Description : Алгоритмы для работы с троичным деревом
 //============================================================================
 
 #include <iostream>
