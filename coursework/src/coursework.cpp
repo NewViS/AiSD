@@ -1,204 +1,219 @@
-//============================================================================
+//===========================================================================
 // Name        : coursework.cpp
-// Author      : Pesterev
+// Author      : Pesterevc Victor
 // Version     :
-// Copyright   : 
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
+// Copyright   :
+// Description : Применение алгоритма Куна для поиска трансверсали наибольшей
+//               мощности частично пересекающихся подмножеств
+//===========================================================================
+#include <vector>
+#include <cstdio>
+#include <string.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <set>
-#include <stack>
-#include <string.h>
+#include <algorithm>
+#include <random>
+#include <time.h>
 
 using namespace std;
 
-class Elem {
-	int id =0, numParents=1;
-	bool isUsed = false;
-
-public:
-	Elem(int ID):id(ID){}
-	void increasePar(){++numParents;}
-	void decreasePar(){--numParents;}
-	void dShow(){cout << "id = " << id << " par = "<< numParents<< " Used = " << isUsed<<endl;}
-	friend class Set;
-	friend class Graph;
-};
-
-class Set {
-	char name;
-	vector<Elem*> elems; //элементы множества
-	static vector<Elem*> univers; //уникальные элементы множеств
-
-public:
-	Set(char nm, vector<string> els);
-	~Set(){
-		elems.clear();
-		for (vector<Elem*>::iterator iter = univers.begin(); iter != univers.end();
-						iter++) {
-				delete(*iter);
-			}
-		univers.clear();
-	}
-
-	Elem* findElem(int, vector<Elem*>);
-	Elem* findMinPar(); //нахождение элемента с мин количество родителей
-	void decreaseChild(); //уменьшение количества родителей для всех детей, входящих в множество
-	void dShow();
-	friend class Graph;
-};
-vector<Elem*> Set::univers = {};
-
-Elem* Set::findMinPar(){
-	Elem* A = nullptr;
-	int minPar = INT_MAX;
-	for (vector<Elem*>::iterator iter = elems.begin(); iter != elems.end();
-					iter++){
-			if((*iter)->numParents < minPar && !(*iter)->isUsed){
-				A = *iter;
-				minPar = (*iter)->numParents;
-			}
-		}
-	return A;
-}
-
-Elem* Set::findElem(int ID, vector<Elem*> vec){
-	Elem *A = nullptr;
-	for (vector<Elem*>::iterator iter = vec.begin(); iter != vec.end();
-				iter++){
-		if((*iter)->id == ID) A = *iter;
-	}
-	return A;
-}
-
-void Set::dShow(){
-	cout << name <<endl;
-	for (vector<Elem*>::iterator iter = elems.begin(); iter != elems.end();
-			iter++) {
-		(*iter)->dShow();
-	}
-}
-
-void Set::decreaseChild(){
-	for (vector<Elem*>::iterator iter = elems.begin(); iter != elems.end();
-				iter++){
-		(*iter)->decreasePar();
-	}
-}
-
-Set::Set(char nm, vector<string> els):name(nm){
-	int id;
-	Elem *A;
-	for (vector<string>::iterator iter = els.begin(); iter != els.end();
-			iter++) {
-		id = atoi((*iter).c_str());
-		if (id) {
-			if (!findElem(id, elems)) {
-				A = findElem(id, univers);
-				if (A) {
-					elems.push_back(A);
-					A->increasePar();
-				} else {
-					univers.push_back(A = new Elem(id));
-					elems.push_back(A);
-				}
-
-				//A->dShow();
-			}
-		}
-	}
-}
-
 class Graph {
-	vector<Set*> sets; //набор множеств
+	int n, k; //кол-во эл-тов в первой и второй доле
+	vector<int> elems; //элементы второй доли
+	vector<vector<int>> g; //вектор номеров вершин второй доли, в которые можно прийти из вершины первой
+	vector<int> mt; //вершины первой доли, связанные с вершинами второй
+	vector<char> used; //использованные вершины
 public:
-	Graph(vector<vector<string>> v); //входные значения
 	Graph(string filename); //файл входных значений
-	~Graph(){
-		for (vector<Set*>::iterator iter = sets.begin();
-				iter != sets.end(); iter++) {
-			(*iter)->~Set();
-		}
-		sets.clear();
-	}
-	string transversal();
-	void dShow();
+	Graph():n(0),k(0){}; //пустой граф
+	~Graph() {
+		elems.clear();
+		g.clear();
+		mt.clear();
+		used.clear();
+		//cout << "cleaned!";
+	};
+	bool try_kuhn(int v);
+	void find_couples();
+	void fillRand(int n, int k);
+	void printGraph();
+	void write_couples(string filename);
 };
 
-Graph::Graph(vector<vector<string>> v){
-	int cnt = 0;
-	for (vector<vector<string>>::iterator iter = v.begin(); iter != v.end();
-				iter++) {
-		sets.push_back(new Set('A'+ cnt, *iter));
-		++cnt;
+void Graph::write_couples(string filename){
+	ofstream outfile(filename);
+	if (outfile.bad()) {
+			cout << "\nФайл in.txt недоступен";
+			exit(1);
+		}
+	else{
+		this->find_couples();
+		for (int i=0; i<k; ++i)
+					if (mt[i] != -1)
+						outfile << mt[i]+1 <<";"<< *next(elems.begin(), i)<<endl;
 	}
 }
 
-Graph::Graph(string filename) {
-	vector<vector<string>> vec;
-	vector<string> els;
+void Graph::printGraph(){
+	for(int i =0; i<n; ++i){
+		printf("%d: ", i+1);
+		for(size_t j =0; j<g[i].size(); ++j){
+			cout << *next(elems.begin(), g[i][j]) << " ";
+		}
+		cout <<endl;
+	}
+}
+
+void Graph::fillRand(int n, int k){
+	this->n=n; this->k=k;
+	for(int i = 0; i<k; ++i){
+		elems.push_back(i);
+	}
+
+	for(int i = 0; i<n; ++i){
+		g.push_back({});
+		for(int j = 0; j<k; ++j){
+			if(rand()%2){
+				g[i].push_back(j);
+				//cout << j << " ";
+			}
+		}
+		//cout <<endl;
+	}
+}
+
+Graph::Graph(string filename){
+	n = 0; k = 0;
+	int tmp, dist;
+	bool isFirstElem;
 	string line;
 	ifstream infile(filename);
+
 	if (infile.bad()) {
 		cout << "\nФайл in.txt недоступен";
 		exit(1);
 	}
 	else{
+
 		while (infile>>line)
 		{
-			els = {};
-			cout << line << endl;
+			isFirstElem = true;
+			//cout << line << endl;
 			stringstream ss(line);
 			while(getline(ss, line, ';')){
-			    els.push_back(line);
+			    tmp = atoi(line.c_str());
+			    if(find(elems.begin(), elems.end(), tmp) == elems.end()){//{
+			    	elems.push_back(tmp);
+			    	k++;
+			    }
+
+			    dist = distance(elems.begin(), find(elems.begin(), elems.end(), tmp));
+			    if(isFirstElem){
+			    	g.push_back({dist});
+			    	n++;
+			    	isFirstElem = false;
+			    }else{
+
+			    	if(find(g[n-1].begin(), g[n-1].end(), dist) == g[n-1].end()){
+			    		g[n-1].push_back(dist);
+			    	}
+			    }
 			}
-			vec.push_back(els);
 		}
 	}
-
-	int cnt = 0;
-		for (vector<vector<string>>::iterator iter = vec.begin(); iter != vec.end();
-					iter++) {
-			sets.push_back(new Set('A'+ cnt, *iter));
-			++cnt;
-		}
 }
 
-void Graph::dShow(){
-	for (vector<Set*>::iterator iter = sets.begin();
-					iter != sets.end(); iter++) {
-				(*iter)->dShow();
-			}
-}
-
-string Graph::transversal(){
-	string trans = "";
-	Elem* A = nullptr;
-	for (vector<Set*>::iterator iter = sets.begin(); iter != sets.end();
-			iter++) {
-		A = (*iter)->findMinPar();
-		if(A){
-			trans += to_string(A->id) + " ";
-			A->isUsed = true;
-			(*iter)->decreaseChild();
+bool Graph::try_kuhn (int v) {
+	if (used[v])  return false;
+	used[v] = true;
+	for (size_t i=0; i<g[v].size(); ++i) {
+		int to = g[v][i];
+		if (mt[to] == -1 || try_kuhn (mt[to])) {
+			mt[to] = v;
+			return true;
 		}
 	}
-	return trans;
+	return false;
 }
 
+void Graph::find_couples(){
+	int power =0;
+	mt.assign (k, -1);
+		vector<char> used1 (n);
+		for (int i=0; i<n; ++i)
+			for (size_t j=0; j<g[i].size(); ++j)
+				if (mt[g[i][j]] == -1) {
+					mt[g[i][j]] = i;
+					used1[i] = true;
+					break;
+				}
+		for (int i=0; i<n; ++i) {
+			if (used1[i])  continue;
+			used.assign (n, false);
+			try_kuhn (i);
+		}
 
+		for (int i=0; i<k; ++i)
+			if (mt[i] != -1)
+				{
+				printf ("%d — %d\n", mt[i]+1, *next(elems.begin(), i));
+				++power;
+				}
+		cout<<"Мощность: "<<power<<endl;
+}
+
+void print_menu() {
+	cout
+			<< "Выберите действие:\n1—Чтение подмножеств из файла"
+					"\n2—Случайный набор подмножеств"
+					"\n3—Вывод подмножеств"
+					"\n4—Найти трансверсаль"
+					"\n5—Записать трансверсаль в файл"
+					"\n0—Выход"
+			<< endl;
+}
 
 int main() {
-	//Graph gr =Graph({{"1","4","5"},{"1"},{"2","3","4"},{"2","4"}});
+	int tmp=-1;
+	int n=0, k=0;
+	Graph gr;
 
-	Graph gr = Graph("in.txt");
-	gr.dShow();
-	cout << gr.transversal() << endl; // prints
+	srand(time(nullptr));
 
-	//gr.dShow();
+	while (tmp) {
+		print_menu();
+		cin >> tmp;
+		switch (tmp) {
+		case 0: break;
+		case 1: {
+			gr = Graph("in.txt");
+			break;
+		}
+		case 2: {
+			gr = Graph();
+			cout << "Введите число множеств и элементов:" << endl;
+			cin >> n >> k;
+			gr.fillRand(n, k);
+			break;
+		}
+		case 3:{
+			gr.printGraph();
+			break;
+		}
+		case 4:{
+			gr.find_couples();
+			break;
+		}
+		case 5:{
+			gr.write_couples("out.txt");
+			break;
+		}
+		default: {
+			cout << "Введено неверное значение!" << endl;
+		}
+		}
+	}
+
 	return 0;
 }
