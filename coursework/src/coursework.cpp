@@ -1,6 +1,6 @@
 //===========================================================================
 // Name        : coursework.cpp
-// Author      : Pesterevc Victor
+// Author      : Pesterev Victor
 // Version     :
 // Copyright   :
 // Description : Применение алгоритма Куна для поиска трансверсали наибольшей
@@ -41,7 +41,7 @@ public:
 	void write_couples(string filename);
 };
 
-void Graph::write_couples(string filename){
+void Graph::write_couples(string filename){ //запись трансверсали
 	ofstream outfile(filename);
 	if (outfile.bad()) {
 			cout << "\nФайл in.txt недоступен";
@@ -55,7 +55,7 @@ void Graph::write_couples(string filename){
 	}
 }
 
-void Graph::printGraph(){
+void Graph::printGraph(){ //вывод графа
 	for(int i =0; i<n; ++i){
 		printf("%d: ", i+1);
 		for(size_t j =0; j<g[i].size(); ++j){
@@ -65,7 +65,7 @@ void Graph::printGraph(){
 	}
 }
 
-void Graph::fillRand(int n, int k){
+void Graph::fillRand(int n, int k){ //случайное заполнение множеств
 	this->n=n; this->k=k;
 	for(int i = 0; i<k; ++i){
 		elems.push_back(i);
@@ -83,7 +83,7 @@ void Graph::fillRand(int n, int k){
 	}
 }
 
-Graph::Graph(string filename){
+Graph::Graph(string filename){ //ввод графа из файла
 	n = 0; k = 0;
 	int tmp, dist;
 	bool isFirstElem;
@@ -96,20 +96,20 @@ Graph::Graph(string filename){
 	}
 	else{
 
-		while (infile>>line)
+		while (infile>>line) //построчное чтение файла
 		{
 			isFirstElem = true;
 			//cout << line << endl;
 			stringstream ss(line);
-			while(getline(ss, line, ';')){
+			while(getline(ss, line, ';')){ //разбиение строки на элементы
 			    tmp = atoi(line.c_str());
-			    if(find(elems.begin(), elems.end(), tmp) == elems.end()){//{
+			    if(find(elems.begin(), elems.end(), tmp) == elems.end()){ //если такой эл-т ранее не встречался
 			    	elems.push_back(tmp);
 			    	k++;
 			    }
 
 			    dist = distance(elems.begin(), find(elems.begin(), elems.end(), tmp));
-			    if(isFirstElem){
+			    if(isFirstElem){ //если эл-т первый в данном подмножестве
 			    	g.push_back({dist});
 			    	n++;
 			    	isFirstElem = false;
@@ -124,7 +124,7 @@ Graph::Graph(string filename){
 	}
 }
 
-bool Graph::try_kuhn (int v) {
+bool Graph::try_kuhn (int v) { //обход в глубину
 	if (used[v])  return false;
 	used[v] = true;
 	for (size_t i=0; i<g[v].size(); ++i) {
@@ -137,24 +137,24 @@ bool Graph::try_kuhn (int v) {
 	return false;
 }
 
-void Graph::find_couples(){
+void Graph::find_couples(){ //нахождение трансверсали
 	int power =0;
 	mt.assign (k, -1);
 		vector<char> used1 (n);
-		for (int i=0; i<n; ++i)
+		for (int i=0; i<n; ++i) //эвристическое нахождение пар
 			for (size_t j=0; j<g[i].size(); ++j)
 				if (mt[g[i][j]] == -1) {
 					mt[g[i][j]] = i;
 					used1[i] = true;
 					break;
 				}
-		for (int i=0; i<n; ++i) {
+		for (int i=0; i<n; ++i) { //применение алгоритма Куна для поиска наибольшего паросочетания
 			if (used1[i])  continue;
 			used.assign (n, false);
 			try_kuhn (i);
 		}
 
-		for (int i=0; i<k; ++i)
+		for (int i=0; i<k; ++i) //вывод найденных пар
 			if (mt[i] != -1)
 				{
 				printf ("%d — %d\n", mt[i]+1, *next(elems.begin(), i));
@@ -186,26 +186,26 @@ int main() {
 		cin >> tmp;
 		switch (tmp) {
 		case 0: break;
-		case 1: {
+		case 1: { //ввод из файла
 			gr = Graph("in.txt");
 			break;
 		}
-		case 2: {
+		case 2: { //случайный
 			gr = Graph();
 			cout << "Введите число множеств и элементов:" << endl;
 			cin >> n >> k;
 			gr.fillRand(n, k);
 			break;
 		}
-		case 3:{
+		case 3:{ //вывод подмножеств
 			gr.printGraph();
 			break;
 		}
-		case 4:{
+		case 4:{ //нахождение трансверсали
 			gr.find_couples();
 			break;
 		}
-		case 5:{
+		case 5:{ //запись в файл
 			gr.write_couples("out.txt");
 			break;
 		}
